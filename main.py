@@ -103,7 +103,7 @@ def matching_game():
     data = db.execute('SELECT * FROM contacts').fetchall()
     shuffled_contacts = list(data)
     shuffle(shuffled_contacts)
-    return render_template('index.html', message='', contacts=shuffled_contacts)
+    return render_template('index.html', rows=shuffled_contacts)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
