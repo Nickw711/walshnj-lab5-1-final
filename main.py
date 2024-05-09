@@ -67,7 +67,7 @@ def index():
                 <input type="submit" value="Submit">
             </form>
             <p>{{ message }}</p>
-            <button onclick="window.location.href='/index.html'">Play Matching Game</button>
+            <button onclick="window.location.href='templates/index.html'">Play Matching Game</button>
             {% if contacts %}
                 <table border="1">
                     <tr>
