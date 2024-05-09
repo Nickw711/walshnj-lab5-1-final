@@ -66,7 +66,7 @@ def index():
                 <input type="text" id="phone" name="phone" required><br><br>
                 <input type="submit" value="Submit">
             </form>
-            <a href="templates/index.html">Matching Game</a>
+            <a href="index.html">Matching Game</a>
             <p>{{ message }}</p>
             {% if contacts %}
                 <table border="1">
