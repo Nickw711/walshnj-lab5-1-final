@@ -53,6 +53,10 @@ def index():
     # Render the index.html template with contacts and message
     return render_template('index.html', rows=contacts, message=message)
 
+@app.route('/matching-game')
+def matching_game():
+    return render_template('index.html', rows=[], message='')
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     init_db()  # Initialize the database and table
