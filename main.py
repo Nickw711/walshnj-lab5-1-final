@@ -98,7 +98,7 @@ def index():
 
 @app.route('/matching-game')
 def matching_game():
-    return render_template('index.html', rows=contacts, message=message)
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
