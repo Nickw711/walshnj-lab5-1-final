@@ -93,9 +93,12 @@ def index():
             {% else %}
                 <p>No contacts found.</p>
             {% endif %}
+            {% if result_message %}
+                <p>{{ result_message }}</p>
+            {% endif %}
         </body>
         </html>
-    ''', message=message, contacts=contacts)
+    ''', message=message, contacts=contacts, result_message=session.pop('result_message', ''))
 
 @app.route('/matching-game')
 def matching_game():
@@ -105,19 +108,21 @@ def matching_game():
     shuffled_numbers = [contact['phone'] for contact in data]
     shuffle(shuffled_names)
     shuffle(shuffled_numbers)
-    return render_template('index.html', names=shuffled_names, numbers=shuffled_numbers)
+    session['correct_numbers'] = ','.join(shuffled_numbers)
+    return render_template('index.html', names=shuffled_names)
 
 @app.route('/check-guess', methods=['POST'])
 def check_guess():
-    correct_numbers = request.form.get('correct_numbers').split(',')
+    correct_numbers = session.get('correct_numbers').split(',')
     guesses = request.form.getlist('guesses[]')
     if guesses == correct_numbers:
-        message = "Congratulations! Your guess is correct."
+        session['result_message'] = "Congratulations! Your guess is correct."
     else:
-        message = "Sorry, your guess is incorrect."
-    return render_template('result.html', message=message)
+        session['result_message'] = "Sorry, your guess is incorrect."
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+    app.secret_key = os.urandom(24)
     init_db()  # Initialize the database and table
     app.run(debug=True, host='0.0.0.0', port=port)
