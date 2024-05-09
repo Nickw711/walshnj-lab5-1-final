@@ -40,43 +40,42 @@
     </div>
     
     <script>
-        // Shuffle function to shuffle the pairs
-        function shuffle(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-            }
-            return array;
+    // Shuffle function to shuffle the pairs
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
         }
+        return array;
+    }
+    // Shuffle the pairs
+    const rows = document.querySelectorAll('tr.pair');
+    const shuffledRows = shuffle(Array.from(rows));
+    const gameTable = document.getElementById('game-table');
+    shuffledRows.forEach(row => gameTable.appendChild(row));
 
-        // Shuffle the pairs
-        const pairs = document.querySelectorAll('.pair');
-        const shuffledPairs = shuffle(Array.from(pairs));
-        const gameTable = document.getElementById('game-table');
-        shuffledPairs.forEach(pair => gameTable.appendChild(pair));
-
-        // Check if the user's input matches the correct pair
-        const matchingForm = document.getElementById('matching-form');
-        matchingForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const inputName = document.getElementById('input-name').value;
-            const inputPhone = document.getElementById('input-phone').value;
-            const correctPair = Array.from(document.querySelectorAll('.pair')).find(pair => {
-                const name = pair.querySelector('.name').textContent;
-                const phone = pair.querySelector('.phone').textContent;
-                return name === inputName && phone === inputPhone;
-            });
-            if (correctPair) {
-                document.getElementById('result-message').textContent = 'Correct!';
-            } else {
-                document.getElementById('result-message').textContent = 'Incorrect. Please try again.';
-            }
-            // Clear input fields
-            document.getElementById('input-name').value = '';
-            document.getElementById('input-phone').value = '';
+    // Check if the user's input matches the correct pair
+    const matchingForm = document.getElementById('matching-form');
+    matchingForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const inputName = document.getElementById('input-name').value;
+        const inputPhone = document.getElementById('input-phone').value;
+        const correctPair = Array.from(document.querySelectorAll('tr.pair')).find(pair => {
+            const name = pair.querySelector('.name').textContent.trim();
+            const phone = pair.querySelector('.phone').textContent.trim();
+            return name === inputName && phone === inputPhone;
         });
+        if (correctPair) {
+            document.getElementById('result-message').textContent = 'Correct!';
+        } else {
+            document.getElementById('result-message').textContent = 'Incorrect. Please try again.';
+        }
+        // Clear input fields
+        document.getElementById('input-name').value = '';
+        document.getElementById('input-phone').value = '';
+    });
     </script>
 </body>
 </html>
