@@ -29,7 +29,6 @@ def init_db():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     message = ''  # Message indicating the result of the operation
-    result_message = session.pop('result_message', '')  # Retrieve result message from session
     if request.method == 'POST':
         # Check if it's a delete action
         if request.form.get('action') == 'delete':
@@ -95,12 +94,9 @@ def index():
             {% else %}
                 <p>No contacts found.</p>
             {% endif %}
-            {% if result_message %}
-                <p>{{ result_message }}</p>  <!-- Display result message if it exists -->
-            {% endif %}
         </body>
         </html>
-    ''', message=message, contacts=contacts, result_message=result_message)
+    ''', message=message, contacts=contacts)
 
 @app.route('/matching-game')
 def matching_game():
@@ -118,9 +114,9 @@ def check_guess():
     correct_numbers = session.get('correct_numbers').split(',')
     guesses = request.form.getlist('guesses[]')
     if guesses == correct_numbers:
-        session['result_message'] = "Congratulations! Your guess is correct."
+        message = "Congratulations! Your guess is correct."
     else:
-        session['result_message'] = "Sorry, your guess is incorrect."
+        message = "Sorry, your guess is incorrect."
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
