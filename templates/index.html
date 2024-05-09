@@ -20,10 +20,10 @@
                 </tr>
             </thead>
             <tbody id="game-table">
-                {% for row in rows %}
-                    <tr class="pair">
-                        <td class="name">{{ row[0] }}</td>
-                        <td class="phone hidden">{{ row[1] }}</td>
+                {% for contact in rows %}
+                    <tr>
+                        <td>{{ contact['name'] }}</td>
+                        <td>{{ contact['phone'] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
