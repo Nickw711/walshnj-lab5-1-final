@@ -19,14 +19,7 @@
                     <th>Phone Number</th>
                 </tr>
             </thead>
-            <tbody id="game-table">
-                {% for contact in rows %}
-                    <tr>
-                        <td>{{ contact['name'] }}</td>
-                        <td>{{ contact['phone'] }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+            <tbody id="game-table"></tbody>
         </table>
         <br>
         <form id="matching-form">
@@ -39,57 +32,59 @@
         <p id="result-message"></p>
     </div>
     
-<script>
-    // Shuffle function to shuffle an array
-    function shuffle(array) {
-        let currentIndex = array.length, randomIndex;
-        while (currentIndex !== 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    <script>
+        // Shuffle function to shuffle an array
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
         }
-        return array;
-    }
 
-    // Shuffle the rows independently
-    const names = Array.from(document.querySelectorAll('.name'));
-    const phones = Array.from(document.querySelectorAll('.phone'));
-    const shuffledNames = shuffle(names);
-    const shuffledPhones = shuffle(phones);
+        // Get names and phone numbers into separate arrays
+        const names = Array.from(document.querySelectorAll('td:nth-child(1)')).map(name => name.textContent.trim());
+        const phones = Array.from(document.querySelectorAll('td:nth-child(2)')).map(phone => phone.textContent.trim());
 
-    // Reassemble the shuffled rows in the table
-    const gameTable = document.getElementById('game-table');
-    shuffledNames.forEach((name, index) => {
-        const row = document.createElement('tr');
-        const nameCell = document.createElement('td');
-        const phoneCell = document.createElement('td');
-        nameCell.textContent = name.textContent.trim();
-        phoneCell.textContent = shuffledPhones[index].textContent.trim();
-        row.appendChild(nameCell);
-        row.appendChild(phoneCell);
-        gameTable.appendChild(row);
-    });
+        // Shuffle names and phone numbers independently
+        const shuffledNames = shuffle(names);
+        const shuffledPhones = shuffle(phones);
 
-    // Check if the user's input matches the correct pair
-    const matchingForm = document.getElementById('matching-form');
-    matchingForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const inputName = document.getElementById('input-name').value.trim();
-        const inputPhone = document.getElementById('input-phone').value.trim();
-        const correctPair = Array.from(document.querySelectorAll('tr')).find(row => {
-            const name = row.querySelector('.name').textContent.trim();
-            const phone = row.querySelector('.phone').textContent.trim();
-            return name === inputName && phone === inputPhone;
+        // Populate the table with shuffled names and phone numbers
+        const gameTable = document.getElementById('game-table');
+        shuffledNames.forEach((name, index) => {
+            const row = document.createElement('tr');
+            const nameCell = document.createElement('td');
+            const phoneCell = document.createElement('td');
+            nameCell.textContent = name;
+            phoneCell.textContent = shuffledPhones[index];
+            row.appendChild(nameCell);
+            row.appendChild(phoneCell);
+            gameTable.appendChild(row);
         });
-        if (correctPair) {
-            document.getElementById('result-message').textContent = 'Correct!';
-        } else {
-            document.getElementById('result-message').textContent = 'Incorrect. Please try again.';
-        }
-        // Clear input fields
-        document.getElementById('input-name').value = '';
-        document.getElementById('input-phone').value = '';
-    });
-</script>
+
+        // Check if the user's input matches the correct pair
+        const matchingForm = document.getElementById('matching-form');
+        matchingForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const inputName = document.getElementById('input-name').value.trim();
+            const inputPhone = document.getElementById('input-phone').value.trim();
+            const correctPair = Array.from(document.querySelectorAll('tr')).find(row => {
+                const name = row.querySelector('td:nth-child(1)').textContent.trim();
+                const phone = row.querySelector('td:nth-child(2)').textContent.trim();
+                return name === inputName && phone === inputPhone;
+            });
+            if (correctPair) {
+                document.getElementById('result-message').textContent = 'Correct!';
+            } else {
+                document.getElementById('result-message').textContent = 'Incorrect. Please try again.';
+            }
+            // Clear input fields
+            document.getElementById('input-name').value = '';
+            document.getElementById('input-phone').value = '';
+        });
+    </script>
 </body>
 </html>
