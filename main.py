@@ -66,8 +66,8 @@ def index():
                 <input type="text" id="phone" name="phone" required><br><br>
                 <input type="submit" value="Submit">
             </form>
-            <a href="index.html">Matching Game</a>
             <p>{{ message }}</p>
+            <button onclick="window.location.href='/index.html'">Play Matching Game</button>
             {% if contacts %}
                 <table border="1">
                     <tr>
