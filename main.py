@@ -1,9 +1,10 @@
-from flask import Flask, request, render_template_string, redirect, url_for, render_template
+from flask import Flask, request, render_template_string, redirect, url_for, render_template, session
 from random import shuffle
 import sqlite3
 import os
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 # Database file path
 DATABASE = 'demo.db'
