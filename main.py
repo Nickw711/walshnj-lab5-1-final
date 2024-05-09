@@ -67,7 +67,7 @@ def index():
                 <input type="submit" value="Submit">
             </form>
             <p>{{ message }}</p>
-            <button onclick="window.location.href='templates/index.html'">Play Matching Game</button>
+            <a href="{{ url_for('matching_game') }}">Play Matching Game</a>
             {% if contacts %}
                 <table border="1">
                     <tr>
@@ -95,6 +95,10 @@ def index():
         </body>
         </html>
     ''', message=message, contacts=contacts)
+
+@app.route('/matching-game')
+def matching_game():
+    return render_template('index.html', rows=contacts, message=message)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
