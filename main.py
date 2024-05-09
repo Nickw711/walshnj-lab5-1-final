@@ -50,8 +50,6 @@ def index():
     # Always display the contacts table
     db = get_db()
     contacts = db.execute('SELECT * FROM contacts').fetchall()
-    shuffled_contacts = list(contacts)
-    shuffle(shuffled_contacts)
 
     # Display the HTML form along with the contacts table
     return render_template_string('''
@@ -101,7 +99,11 @@ def index():
 
 @app.route('/matching-game')
 def matching_game():
-    return render_template('index.html', message=message, contacts=shuffled_contacts)
+    db = get_db()
+    contacts = db.execute('SELECT * FROM contacts').fetchall()
+    shuffled_contacts = list(contacts)
+    shuffle(shuffled_contacts)
+    return render_template('index.html', message='', contacts=shuffled_contacts)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
