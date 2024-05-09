@@ -39,8 +39,8 @@
         <p id="result-message"></p>
     </div>
     
-    <script>
-    // Shuffle function to shuffle the pairs
+<script>
+    // Shuffle function to shuffle an array
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
         while (currentIndex !== 0) {
@@ -50,21 +50,35 @@
         }
         return array;
     }
-    // Shuffle the pairs
-    const rows = document.querySelectorAll('tr.pair');
-    const shuffledRows = shuffle(Array.from(rows));
+
+    // Shuffle the rows independently
+    const names = Array.from(document.querySelectorAll('.name'));
+    const phones = Array.from(document.querySelectorAll('.phone'));
+    const shuffledNames = shuffle(names);
+    const shuffledPhones = shuffle(phones);
+
+    // Reassemble the shuffled rows in the table
     const gameTable = document.getElementById('game-table');
-    shuffledRows.forEach(row => gameTable.appendChild(row));
+    shuffledNames.forEach((name, index) => {
+        const row = document.createElement('tr');
+        const nameCell = document.createElement('td');
+        const phoneCell = document.createElement('td');
+        nameCell.textContent = name.textContent.trim();
+        phoneCell.textContent = shuffledPhones[index].textContent.trim();
+        row.appendChild(nameCell);
+        row.appendChild(phoneCell);
+        gameTable.appendChild(row);
+    });
 
     // Check if the user's input matches the correct pair
     const matchingForm = document.getElementById('matching-form');
     matchingForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        const inputName = document.getElementById('input-name').value;
-        const inputPhone = document.getElementById('input-phone').value;
-        const correctPair = Array.from(document.querySelectorAll('tr.pair')).find(pair => {
-            const name = pair.querySelector('.name').textContent.trim();
-            const phone = pair.querySelector('.phone').textContent.trim();
+        const inputName = document.getElementById('input-name').value.trim();
+        const inputPhone = document.getElementById('input-phone').value.trim();
+        const correctPair = Array.from(document.querySelectorAll('tr')).find(row => {
+            const name = row.querySelector('.name').textContent.trim();
+            const phone = row.querySelector('.phone').textContent.trim();
             return name === inputName && phone === inputPhone;
         });
         if (correctPair) {
@@ -76,6 +90,6 @@
         document.getElementById('input-name').value = '';
         document.getElementById('input-phone').value = '';
     });
-    </script>
+</script>
 </body>
 </html>
