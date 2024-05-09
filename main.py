@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template_string, redirect, url_for
 import sqlite3
 import os
 
@@ -50,12 +50,51 @@ def index():
     db = get_db()
     contacts = db.execute('SELECT * FROM contacts').fetchall()
 
-    # Render the index.html template with contacts and message
-    return render_template('index.html', rows=contacts, message=message)
-
-@app.route('/matching-game')
-def matching_game():
-    return render_template('index.html', rows=[], message='')
+    # Display the HTML form along with the contacts table
+    return render_template_string('''
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Contacts</title>
+        </head>
+        <body>
+            <h2>Add Contact</h2>
+            <form method="POST" action="/">
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name" required><br>
+                <label for="phone">Phone Number:</label><br>
+                <input type="text" id="phone" name="phone" required><br><br>
+                <input type="submit" value="Submit">
+            </form>
+            <a href="templates/index.html">Matching Game</a>
+            <p>{{ message }}</p>
+            {% if contacts %}
+                <table border="1">
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th>Delete</th>
+                    </tr>
+                    {% for contact in contacts %}
+                        <tr>
+                            <td>{{ contact['name'] }}</td>
+                            <td>{{ contact['phone'] }}</td>
+                            <td>
+                                <form method="POST" action="/">
+                                    <input type="hidden" name="contact_id" value="{{ contact['id'] }}">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="submit" value="Delete">
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No contacts found.</p>
+            {% endif %}
+        </body>
+        </html>
+    ''', message=message, contacts=contacts)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
