@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 # Database file path
-DATABASE = '/nfs/demo.db'
+DATABASE = 'demo.db'
 
 def get_db():
     db = sqlite3.connect(DATABASE)
@@ -101,9 +101,21 @@ def index():
 def matching_game():
     db = get_db()
     data = db.execute('SELECT * FROM contacts').fetchall()
-    shuffled_contacts = list(data)
-    shuffle(shuffled_contacts)
-    return render_template('index.html', rows=shuffled_contacts)
+    shuffled_names = [contact['name'] for contact in data]
+    shuffled_numbers = [contact['phone'] for contact in data]
+    shuffle(shuffled_names)
+    shuffle(shuffled_numbers)
+    return render_template('index.html', names=shuffled_names, numbers=shuffled_numbers)
+
+@app.route('/check-guess', methods=['POST'])
+def check_guess():
+    correct_numbers = request.form.get('correct_numbers').split(',')
+    guesses = request.form.getlist('guesses[]')
+    if guesses == correct_numbers:
+        message = "Congratulations! Your guess is correct."
+    else:
+        message = "Sorry, your guess is incorrect."
+    return render_template('result.html', message=message)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
